@@ -6,10 +6,18 @@ This repository is public in order to show the solution to the problem, __but it
 </br>
 </br>
 
-## Proposed problem :pencil:
+# Table of Contents
+- [About the repository](#bsp---bit-twiddling)
+- [Proposed problem :pencil:](#proposed-problem)
+- [How does it work? :question:](#how-does-it-work)
+  * [Encoder](#encoder)
+  * [Decoder](#decoder)
+  * [Implementing Steganography](#implementing-steganography)
+
+# Proposed problem
 The aim of this work is to practice memory manipulation at a low level, implementing a simple technique of steganography in images.
 
-## How does it work? :question:
+# How does it work?
 A program with two features should be created:
 
 - Encode: reads two images, the base image and the secret image (to be hidden in the first). The program encodes the secret image into the first one, and writes a new file with the result.

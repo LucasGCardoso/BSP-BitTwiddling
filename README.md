@@ -17,6 +17,8 @@ This repository is public in order to show the solution to the problem, __but it
 # Proposed problem
 The aim of this work is to practice memory manipulation at a low level, implementing a simple technique of steganography in images.
 
+Currently encryption is widely used when you want to send a confidential message. This is done in virtually all applications that involve data exchange, such as browsers, email, instant messaging, etc. However, there is another way to hide information, called steganography. It consists of applying techniques capable of hiding information within other files such as images, music or videos. The aim of this work is to practice memory manipulation at a low level, implementing a simple technique of steganography in images.
+
 # How does it work?
 A program with two features should be created:
 

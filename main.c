@@ -76,6 +76,51 @@ int main(int argc, char** argv)
     }
 
 
+    int altura = secreta.height;
+    int largura = secreta.width;
+
+
+/* Colocar no vetor de inteiros "bin" os bits da altura. Também está funcionando*/
+    int INT_SIZE = 12;
+    int index = INT_SIZE - 1;
+    int bin[INT_SIZE];
+    while(index >= 0)
+    {
+
+        bin[index] = altura & 1;
+        index--;
+        altura >>= 1;
+    }
+
+    for(i=0; i<INT_SIZE; i++)
+    {
+        printf("%d", bin[i]);
+    }
+
+    printf("\n");
+
+/*  Printando os bits da altura individualmente e certinho*/
+    i = 0;
+    altura = secreta.height;
+    while(i<2)
+    {
+         printf("%d ", altura & 1);
+         altura >>= 1;
+         printf("%d ", altura & 1);
+         altura >>= 1;
+
+         printf("%d ", altura & 1);
+         altura >>= 1;
+         printf("%d ", altura & 1);
+         altura >>= 1;
+
+         printf("%d ", altura & 1);
+         altura >>= 1;
+         printf("%d ", altura & 1);
+         altura >>= 1;
+        i++;
+    }
+
 //Armazenando os bits da imagem secreta na imagem base (EM TESTE)
     for(i=0; i<base.width*base.height; i++){
         base.img[i].r |= secreta.img[i].r;

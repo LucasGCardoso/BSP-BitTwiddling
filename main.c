@@ -36,45 +36,6 @@ void load(char* name, Img* pic)
     printf("Load: %s (%d x %d x %d)\n", name, pic->width, pic->height, chan);
 }
 
-void decToBin(int dec)
-{
-    if( dec > 4095)
-    {
-        printf("Valor invalido para conversao, o valor maximo eh 4095");
-        exit(1);
-    }
-    int i = 0;
-    int binValue[8];
-    while (dec > 0)
-    {
-
-        binValue[i] = dec % 2;
-        dec = dec / 2;
-        i++;
-    }
-
-    static int binReverse[8];
-
-    for(int j = i; j<8; j++)
-    {
-        binValue[j] = 0;
-    }
-
-    for(int j = 0; j<8; j++)
-    {
-        int k = 8-1-j;
-        binReverse[j] = binValue[k];
-    }
-
-    printf("\n[");
-    for(int j = 0; j<8; j++)
-    {
-        printf("%d", binReverse[j]);
-    }
-    printf("]\n");
-
-
-}
 int main(int argc, char** argv)
 {
     Img base, secreta;
@@ -86,10 +47,10 @@ int main(int argc, char** argv)
 
     if (argc == 2)
     {
-        printf("decode");
+        printf("### Starting to decode Image ### \n");
 
         Img saida;
-        //start code
+
         load(argv[1], &base);
         int width;
         int height;
@@ -110,7 +71,8 @@ int main(int argc, char** argv)
         width = width << 2;
 
         width |= ((base.img[1].b) & 0b00000011);
-        printf("WIDTH 6 %d\n", width);
+
+        printf("Width of the secret image is: %d\n", width);
 
 
         height |= ((base.img[2].r) & 0b00000011);
@@ -129,7 +91,8 @@ int main(int argc, char** argv)
         height = height << 2;
 
         height |= ((base.img[3].b) & 0b00000011);
-        printf("height 6 %d\n", height);
+
+        printf("Height of the secret image is: %d\n", height);
 
         saida.width = width;
         saida.height = height;
@@ -141,7 +104,7 @@ int main(int argc, char** argv)
         int i = 0;
         for (; i < (saida.width * saida.height); y ++, i ++)
         {
-            //r
+            //adding red color
             saida.img[i].r |= ((base.img[y].r) & 0b00000011);
             saida.img[i].r = saida.img[i].r << 2;
 
@@ -155,7 +118,7 @@ int main(int argc, char** argv)
 
             saida.img[i].r |= ((base.img[y].r) & 0b00000011);
 
-            //g
+            //adding green color
             saida.img[i].g |= ((base.img[y].g) & 0b00000011);
             saida.img[i].g = saida.img[i].g << 2;
 
@@ -169,7 +132,7 @@ int main(int argc, char** argv)
 
             saida.img[i].g |= ((base.img[y].g) & 0b00000011);
 
-            //b
+            //adding blue color
             saida.img[i].b |= ((base.img[y].b) & 0b00000011);
             saida.img[i].b = saida.img[i].b << 2;
 
@@ -184,31 +147,31 @@ int main(int argc, char** argv)
             saida.img[i].b |= ((base.img[y].b) & 0b00000011);
         }
 
-        printf("%d\n", i);
-
-        printf("Teste: gravando imagem base em result.bmp\n");
+        printf("Saving the secret image in result.bmp\n");
         SOIL_save_image("result.bmp", SOIL_SAVE_TYPE_BMP,
         saida.width, saida.height, 3, (const unsigned char*) saida.img);
 
+        printf("All done here :)");
+
         free(saida.img);
         free(base.img);
-        //end code
+        //We use exit here, so we do not execute the recording part again
         exit(1);
     }
 
     load(argv[1], &base);
     load(argv[2], &secreta);
-    //start codigo
 
     int areaBase = base.height * base.width;
     int areaSecreta = secreta.height * secreta.width;
 
     if(areaBase/4 < areaSecreta + 24)
     {
-        printf("Imagem invalida, a imagem secreta deve ter no maximo 1/4 do tamanho da imagem base");
+        printf("Invalid image. The secret image must be 1/4 - 24 pixels shorter then the base image");
         exit(1);
     }
 
+    // Deleting the last two bits of the base image
     for(int i = 0; i < areaBase; i++)
     {
         base.img[i].r &= 0b11111100;
@@ -216,14 +179,11 @@ int main(int argc, char** argv)
         base.img[i].b &= 0b11111100;
     }
 
-    printf("Primeiros 10 pixels da imagem base ZERADA:\n");
-    for(int i=0; i<10; i++)
-        printf("%02X,%02X,%02X", base.img[i].r, base.img[i].g, base.img[i].b);
     printf("\n\n");
 
-    printf("Width: %d \n", base.width);
-    printf("Height: %d \n", base.height);
-    printf("Area: %d \n", base.width * base.height);
+    printf("Base Image Width: %d \n", base.width);
+    printf("Base Image Height: %d \n", base.height);
+    printf("Base Image Area: %d \n", base.width * base.height);
     int y = 0;
     int i = 0;
     int k = 0;
@@ -264,34 +224,13 @@ int main(int argc, char** argv)
         y++;
     }
 
-    printf("largura %d, altura %d\n", base.width, base.height);
-
-    //end codigo
-
-    printf("Primeiros 10 pixels da imagem base DEPOIS:\n");
-    for(int i=0; i<10; i++)
-        printf("%02X %02X,%02X", base.img[i].r, base.img[i].g, base.img[i].b);
     printf("\n\n");
 
-//    for(int i = 2; i < 4; i ++)
-//    {
-//        decToBin(base.img[i].r);
-//        decToBin(base.img[i].g);
-//        decToBin(base.img[i].b);
-//    }
-
-//    printf("secreta:\n");
-//
-//    for(int i = 0; i < 3; i ++) {
-//        decToBin(secreta.img[i].r);
-//        decToBin(secreta.img[i].g);
-//        decToBin(secreta.img[i].b);
-//    }
-
-    printf("Teste: gravando imagem base em saida.bmp\n");
+    printf("Saving the secret image inside base image in file: saida.bmp\n");
     SOIL_save_image("saida.bmp", SOIL_SAVE_TYPE_BMP,
                     base.width, base.height, 3, (const unsigned char*) base.img);
 
     free(base.img);
     free(secreta.img);
+    printf("All done here :)");
 }

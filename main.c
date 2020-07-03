@@ -38,23 +38,32 @@ void load(char* name, Img* pic)
 
 int main(int argc, char** argv)
 {
+    // Criação das imagens Base e Secreta na estrutura (struct) Img, que é composta pela struct RGB
     Img base, secreta;
+
+    // Comparação para entrada de argumentos da execução do programa.
+
+    // Se o tamanho do argumento for menor que 2, signfiica que é para fazer o Decode.
     if(argc < 2)
     {
         printf("loader [img base] [img secreta]\n");
         exit(1);
     }
 
+    // Se o tamanho do argumento for igual a 2, signfiica que é para fazer o Encode
     if (argc == 2)
     {
         printf("### Starting to decode Image ### \n");
 
+    // Criação da imagem saida
         Img saida;
 
+    // Carrega a imagem e inicia altura e largura
         load(argv[1], &base);
         int width;
         int height;
 
+    // Atribui os dois últimos bits da imagem base à Width e depois "empurra" para o início do byte
         width |= ((base.img[0].r) & 0b00000011);
         width = width << 2;
 
@@ -74,6 +83,7 @@ int main(int argc, char** argv)
 
         printf("Width of the secret image is: %d\n", width);
 
+    // Atribui os dois últimos bits da imagem base à Height e depois "empurra" para o início do byte
 
         height |= ((base.img[2].r) & 0b00000011);
         height = height << 2;
@@ -94,12 +104,18 @@ int main(int argc, char** argv)
 
         printf("Height of the secret image is: %d\n", height);
 
+    // Depois de preenchido, atribui os valores da variável temporaria para a largura e altura da imagem Saida
+
         saida.width = width;
         saida.height = height;
+
+    // Atribui a imagem saída com o RGB*
 
         RGB* arr[width * height];
         saida.img = arr;
 
+
+    // 'For' para pegar os dois últimos bits da imagem base, no RGB, atribuindo para os respectivos RGB da imagem Saida (Atribuindo 8 bits (r, g, b, r) para a imagem de saída (r)
         int y = 4;
         int i = 0;
         for (; i < (saida.width * saida.height); y ++, i ++)
@@ -147,6 +163,7 @@ int main(int argc, char** argv)
             saida.img[i].b |= ((base.img[y].b) & 0b00000011);
         }
 
+    // Cria o arquivo para a imagem através do SOIL
         printf("Saving the secret image in result.bmp\n");
         SOIL_save_image("result.bmp", SOIL_SAVE_TYPE_BMP,
         saida.width, saida.height, 3, (const unsigned char*) saida.img);
@@ -162,6 +179,7 @@ int main(int argc, char** argv)
     load(argv[1], &base);
     load(argv[2], &secreta);
 
+    // Pega a área da imagem Base e Secreta
     int areaBase = base.height * base.width;
     int areaSecreta = secreta.height * secreta.width;
 
@@ -171,8 +189,9 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    // Deleting the last two bits of the base image
-    for(int i = 0; i < areaBase; i++)
+    // Limpa (deleta) os dois últimos bits da imagem base através de máscara
+    int i;
+    for(i = 0; i < areaBase; i++)
     {
         base.img[i].r &= 0b11111100;
         base.img[i].g &= 0b11111100;
@@ -181,11 +200,12 @@ int main(int argc, char** argv)
 
     printf("\n\n");
 
+    // Insere as dimensões da imagem Secreta nos 4 primeiros pixels (nos dois ultimos bits) da imagem base
     printf("Base Image Width: %d \n", base.width);
     printf("Base Image Height: %d \n", base.height);
     printf("Base Image Area: %d \n", base.width * base.height);
     int y = 0;
-    int i = 0;
+    i = 0;
     int k = 0;
 
     base.img[i].r |= secreta.width >> 10;
@@ -204,7 +224,7 @@ int main(int argc, char** argv)
 
 
     i = 4;
-
+    // Insere as cores da imagem secreta nos dois últimos bits da imagem base
     for (; y < (secreta.width * secreta.height); i += 4)
     {
         base.img[i].r |= secreta.img[y].r >> 6;

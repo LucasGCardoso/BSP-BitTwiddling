@@ -30,7 +30,7 @@
 				<Option object_output="./" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="earth.jpg british_summer.jpg" />
+				<Option parameters="saida.bmp" />
 				<Compiler>
 					<Add option="-O3" />
 					<Add directory="include" />
@@ -81,9 +81,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
-			<envvars />
-			<code_completion />
-			<debugger />
 			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>

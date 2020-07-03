@@ -21,7 +21,6 @@ typedef struct
 
 // Protótipos
 void load(char* name, Img* pic);
-void decToBin(int dec);
 
 // Carrega uma imagem para a struct Img
 void load(char* name, Img* pic)
